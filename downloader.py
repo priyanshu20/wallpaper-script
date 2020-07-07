@@ -3,6 +3,7 @@ import requests
 import os
 import shutil
 import argparse
+from tqdm import tqdm
 
 base_url = "https://uhdwallpapers.org"
 
@@ -22,7 +23,8 @@ def downloader(urls, resolution, folder):
         os.mkdir(folder)
         os.chdir(folder)
         print(f"creating a folder called {folder}")
-    for url in urls:
+    print("Downloading images")
+    for url in tqdm(urls):
         try:
             modified_url = url+'/'+resolution
             res = requests.get(modified_url)
@@ -44,7 +46,8 @@ def get_urls(category, pics):
     This method scrapes all the urls from the category and page number supplied and returns the list
     '''
     url_list = []
-    for i in range(1, (int(pics)//16)+2):
+    print("Getting image urls")
+    for i in tqdm(range(1, (int(pics)//16)+2)):
         payload = {"page": i}
         url = base_url+'/category/'+category
         res = requests.get(url, params=payload)
@@ -80,7 +83,6 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     category, pics, folder, resolution = "travel", "10", "script_downloads", "1920x1080"
-    print(args)
     if args.category:
         category = args.category
     if args.pics:
@@ -89,6 +91,5 @@ if __name__ == "__main__":
         folder = args.folder
     if args.resolution:
         resolution = args.resoltion
-    print(category, pics, folder, resolution)
     urls = get_urls(category=category, pics=pics)
     downloader(urls, resolution=resolution, folder=folder)
