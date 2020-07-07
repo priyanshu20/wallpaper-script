@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 import requests
 import os
 import shutil
+import argparse
 
 base_url = "https://uhdwallpapers.org"
 
@@ -11,11 +12,16 @@ def downloader(urls, resolution, folder):
     This method clears all the files inside the folder destination and  then downloads the supplied urls according to the resolution given
     '''
     counter = 1
-    file_list = [x for x in os.listdir(folder)]
-    os.chdir(folder)
-    for x in file_list:
-        os.remove(x)
-    print("Deleting initial files")
+    if folder in os.listdir():
+        file_list = [x for x in os.listdir(folder)]
+        os.chdir(folder)
+        for x in file_list:
+            os.remove(x)
+        print("Deleting initial files")
+    else:
+        os.mkdir(folder)
+        os.chdir(folder)
+        print(f"creating a folder called {folder}")
     for url in urls:
         try:
             modified_url = url+'/'+resolution
@@ -53,12 +59,36 @@ def get_urls(category, pics):
                 if len(url_list) >= int(pics):
                     break
         else:
-            print("Could not find the page, check connectivity,category or page number")
+            print(
+                "Could not find the page, check connectivity,category or resolution given")
 
     return url_list
 
 
 if __name__ == "__main__":
-    urls = get_urls(category="food", pics="5")
-    print(len(urls))
-    downloader(urls, resolution="1920x1080", folder="script_downloads")
+    parser = argparse.ArgumentParser(
+        description="Wallpaper downloader script use command `python downloader.py` to run with default options"
+    )
+    parser.add_argument(
+        "--category", type=str, help="Enter the category of wallpapers you want to download")
+    parser.add_argument("--pics", type=int,
+                        help="Enter number of pictures you want to download")
+    parser.add_argument(
+        "--folder", type=str, help="**DANGEROUS**:This is the name of folder where you want to store the images, but any files previously inside this folder will be deleted")
+    parser.add_argument(
+        "--resolution", type=str, help="Choose the resolution fit for your desktop, demo resoltion : 1920x1080")
+    args = parser.parse_args()
+
+    category, pics, folder, resolution = "travel", "10", "script_downloads", "1920x1080"
+    print(args)
+    if args.category:
+        category = args.category
+    if args.pics:
+        pics = args.pics
+    if args.folder:
+        folder = args.folder
+    if args.resolution:
+        resolution = args.resoltion
+    print(category, pics, folder, resolution)
+    urls = get_urls(category=category, pics=pics)
+    downloader(urls, resolution=resolution, folder=folder)
