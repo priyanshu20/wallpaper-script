@@ -82,7 +82,7 @@ if __name__ == "__main__":
         "--resolution", type=str, help="Choose the resolution fit for your desktop, demo resoltion : 1920x1080")
     args = parser.parse_args()
 
-    category, pics, folder, resolution = "travel", "10", "script_downloads", "1920x1080"
+    category, pics, folder, resolution = "nature", "10", "script_downloads", "1920x1080"
     if args.category:
         category = args.category
     if args.pics:
