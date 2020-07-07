@@ -6,13 +6,13 @@ import shutil
 base_url = "https://uhdwallpapers.org"
 
 
-def downloader(urls, resolution):
+def downloader(urls, resolution, folder):
     '''
     This method clears all the files inside the folder destination and  then downloads the supplied urls according to the resolution given
     '''
     counter = 1
-    file_list = [x for x in os.listdir("script_downloads")]
-    os.chdir("script_downloads")
+    file_list = [x for x in os.listdir(folder)]
+    os.chdir(folder)
     for x in file_list:
         os.remove(x)
     print("Deleting initial files")
@@ -59,6 +59,6 @@ def get_urls(category, pics):
 
 
 if __name__ == "__main__":
-    urls = get_urls(category="travel", pics="37")
+    urls = get_urls(category="food", pics="5")
     print(len(urls))
-    downloader(urls, resolution="1920x1080")
+    downloader(urls, resolution="1920x1080", folder="script_downloads")
