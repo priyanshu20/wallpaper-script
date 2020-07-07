@@ -33,28 +33,32 @@ def downloader(urls, resolution):
             print("Skipping this photograph as some error occured")
 
 
-def get_urls(category, page):
+def get_urls(category, pics):
     '''
     This method scrapes all the urls from the category and page number supplied and returns the list
     '''
-    payload = {"page": page}
     url_list = []
-    url = base_url+'/category/'+category
-    res = requests.get(url, params=payload)
-    if res.status_code == 200:
-        soup = BeautifulSoup(res.content, "html.parser")
-        lis = soup.find_all(class_='item')
-        if len(lis) == 0:
-            print("No photos found returning empty list")
-        for li in lis:
-            # print(li.figure.a.attrs["href"])
-            url_list.append(li.figure.a.attrs["href"])
-    else:
-        print("Could not find the page, check connectivity,category or page number")
+    for i in range(1, (int(pics)//16)+2):
+        payload = {"page": i}
+        url = base_url+'/category/'+category
+        res = requests.get(url, params=payload)
+        if res.status_code == 200:
+            soup = BeautifulSoup(res.content, "html.parser")
+            lis = soup.find_all(class_='item')
+            if len(lis) == 0:
+                print("No more images available")
+                break
+            for li in lis:
+                url_list.append(li.figure.a.attrs["href"])
+                if len(url_list) >= int(pics):
+                    break
+        else:
+            print("Could not find the page, check connectivity,category or page number")
 
     return url_list
 
 
 if __name__ == "__main__":
-    urls = get_urls(category="travel", page="1")
+    urls = get_urls(category="travel", pics="37")
+    print(len(urls))
     downloader(urls, resolution="1920x1080")
