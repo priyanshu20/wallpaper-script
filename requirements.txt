@@ -2,6 +2,6 @@ beautifulsoup4==4.9.1
 PyQt5==5.15.0
 PyQt5-sip==12.8.0
 pyqt5-tools==5.15.0.1.7
-requests==2.24.0
+requests==2.31.0
 tqdm==4.47.0
 
